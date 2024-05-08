@@ -1,30 +1,38 @@
 <?php
+//import output.php
+include_once('output.php');
 
-$data = [];
+// reposta base caso de erro
+$data['status'] = 'ERROR';
+$data['data'] = [];
+
 
 if(isset($_GET['option'])){
 
     switch ($_GET['option']) {
         case 'status':
-            $data['status'] = 'SUCCESS';
-            $data['data'] = ' API RUNNING OK!!';
+            define_response($data, 'API JOIA');
             break;
-        default:
-            $data['status'] = 'ERROR, option  não encontrada';
+        case 'random':
+            // verifica se existe max ou min no get
+            $min = 0;
+            $max = 1000;
+            if(isset($_GET['min'])){
+                $min = intval($_GET['min']);
+
+            }
+            if(isset($_GET['max'])){
+                $max = intval($_GET['max']);
+
+            }
+            if($min >= $max){
+                response($data);
+                return;
+            }
+            define_response($data, rand($min, $max));
             break;
     }
-    
-    
-}else{
-    $data['status'] = 'ERROR, option não declarada';
 }
-
+// chamando a resposta da api passando valo de data
 response($data);
 
-function response($data_response)
-{
-    header("Content-Type: application/json");
-        echo json_encode($data_response);
-}
-
-?>
