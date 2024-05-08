@@ -1,38 +1,37 @@
 <?php
+//==================================================
+// API ROUTES
+//==================================================
+
 //import output.php
 include_once('output.php');
 
-// reposta base caso de erro
-$data['status'] = 'ERROR';
+// reposta base caso de erro (PREPARE RESPONSE)
+$data['status'] = 'ERROR, option nao declarado';
 $data['data'] = [];
 
-
+// SWITCH COM TODAS AS POSSIBILIDADES DE E OPÇÃO QUE A API PDE FAZER
+// (API ROUTES)
 if(isset($_GET['option'])){
 
     switch ($_GET['option']) {
         case 'status':
-            define_response($data, 'API JOIA');
+            api_status($data);
             break;
         case 'random':
-            // verifica se existe max ou min no get
-            $min = 0;
-            $max = 1000;
-            if(isset($_GET['min'])){
-                $min = intval($_GET['min']);
-
-            }
-            if(isset($_GET['max'])){
-                $max = intval($_GET['max']);
-
-            }
-            if($min >= $max){
-                response($data);
-                return;
-            }
-            define_response($data, rand($min, $max));
+            api_random($data);
             break;
+        case 'hash':
+            api_hash($data);
+            break;
+        default:
+            $data['status'] = 'ERROR, valor de option nao encontrado';
+            $data['data'] = [];
+            break;
+
     }
 }
 // chamando a resposta da api passando valo de data
+// (API RESPONSE)
 response($data);
 
